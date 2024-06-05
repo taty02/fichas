@@ -1,0 +1,262 @@
+openapi: 3.0.3
+info:
+  title: API de Exemplo da Ficha 2
+  description:
+    Definição exemplificativa de uma API em OpenAPI 3 para a ficha 2 da UC de Programação III do curso de Multimédia do ISMT
+
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: ismt@ismt.pt 
+
+  license:
+    name: Apache 2.0
+    url:  http://localhost:5000/api/v1 
+  version: 1.0.11
+servers:
+  - url: http://localhost:5000/api/v1
+  
+paths:
+  /student:
+    get:
+      tags:
+        - student
+      summary: Retorna todos os alunos
+      operationId: getalunos
+      responses:
+        '200':
+          description: Executado com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      tags: 
+        - student
+      summary: Cria um novo aluno
+      operationId: postaluno
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: Aluno criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: dados inválidos
+
+  /student/{id}:
+    get:
+      tags:
+        - student
+      summary: Retorna um aluno pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do aluno a ser retornado
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Aluno encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Aluno não encontrado
+    put:
+      tags:
+        - student
+      summary: Atualiza um aluno pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do aluno a ser atualizado
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Aluno atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Aluno não encontrado
+    delete:
+      tags:
+        - student
+      summary: Remove um aluno pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do aluno a ser removido
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Aluno removido com sucesso
+        '404':
+          description: Aluno não encontrado
+  
+  /subject:
+    get:
+      tags:
+        - subject
+      summary: Retorna todas as disciplinas
+      responses:
+        '200':
+          description: Lista de disciplinas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+    post:
+      tags:
+        - subject
+      summary: Cria uma nova disciplina
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        '201':
+          description: Disciplina criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+    
+  /subject/{id}:
+    get:
+      tags:
+        - subject
+      summary: Retorna uma disciplina pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID da disciplina a ser retornada
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Disciplina encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '404':
+          description: Disciplina não encontrada
+    put:
+      tags:
+        - subject
+      summary: Atualiza uma disciplina pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID da disciplina a ser atualizada
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        '200':
+          description: Disciplina atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '404':
+          description: Disciplina não encontrada
+    delete:
+      tags:
+        - subject
+      summary: Remove uma disciplina pelo ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID da disciplina a ser removida
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Disciplina removida com sucesso
+        '404':
+          description: Disciplina não encontrada
+    
+components:
+  schemas:
+    Student:
+      type: object
+      description: Dados referentes aos alunos do curso
+      properties:
+        id:
+          type: integer
+          description: Chave primária da entidade aluno
+        name:
+          type: string
+          description: Nome completo do aluno
+        address:
+          type: string
+          description: Morada fiscal do aluno
+        nif:
+          type: integer
+          description: NIF do aluno
+        subjects:
+          type: array
+          description: Todas as disciplinas a que o aluno se encontra inscrito
+          items:
+            $ref: '#/components/schemas/Subject'
+    Subject:
+      type: object
+      description: Dados referentes às disciplinas do curso
+      properties:
+        id:
+          type: integer
+          description: Chave primária da entidade disciplina
+        name:
+          type: string
+          description: Nome da disciplina
+        totalHours:
+          type: number
+          description: Total de horas letivas da disciplina
+        category:
+          type: string
+          description: Tipo de disciplina (obrigatória/opcional)
+          enum:
+            - mandatory
+            - optional
